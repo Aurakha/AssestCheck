@@ -16,6 +16,9 @@ public class MainMenuAdminFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        // Tambahkan baris berikut agar frame langsung maximize saat dibuka
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         JLabel welcomeLabel = new JLabel("Selamat datang, Admin " + user.getUsername() + "!", SwingConstants.CENTER);
         welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         welcomeLabel.setForeground(new Color(44, 62, 80));
@@ -49,13 +52,16 @@ public class MainMenuAdminFrame extends JFrame {
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 30));
 
-        JButton btnLihatBarang = new JButton("Lihat Daftar Barang");
-        JButton btnTambahBarang = new JButton("Tambah Barang");
-        JButton btnUserMgmt = new JButton("Manajemen User");
-        JButton btnRiwayat = new JButton("Riwayat Peminjaman");
-        JButton btnRequestPeminjaman = new JButton("Approval Peminjaman");
-        JButton btnLog = new JButton("Log History");
-        JButton btnLogout = new JButton("Logout");
+        // Atur ukuran icon tombol (misal 24x24 px)
+        int iconSize = 36;
+
+        JButton btnLihatBarang = new JButton("Lihat Daftar Barang", resizeIcon("src/icon/lihat.png", iconSize, iconSize));
+        JButton btnTambahBarang = new JButton("Tambah Barang", resizeIcon("src/icon/tambah.png", iconSize, iconSize));
+        JButton btnUserMgmt = new JButton("Manajemen User", resizeIcon("src/icon/users.png", iconSize, iconSize));
+        JButton btnRiwayat = new JButton("Riwayat Peminjaman", resizeIcon("src/icon/riwayat.png", iconSize, iconSize));
+        JButton btnRequestPeminjaman = new JButton("Approval Peminjaman", resizeIcon("src/icon/approval.png", iconSize, iconSize));
+        JButton btnLog = new JButton("Log History", resizeIcon("src/icon/log.png", iconSize, iconSize));
+        JButton btnLogout = new JButton("Logout", resizeIcon("src/icon/logout.png", iconSize, iconSize));
 
         // Styling tombol
         JButton[] buttons = {btnLihatBarang, btnTambahBarang, btnUserMgmt, btnRiwayat, btnRequestPeminjaman, btnLog, btnLogout};
@@ -70,6 +76,7 @@ public class MainMenuAdminFrame extends JFrame {
             btn.setForeground(Color.WHITE);
             btn.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
             btn.setHorizontalAlignment(SwingConstants.LEFT);
+            btn.setIconTextGap(16); // Jarak antara icon dan teks
         }
 
         buttonPanel.add(btnLihatBarang);
@@ -87,7 +94,7 @@ public class MainMenuAdminFrame extends JFrame {
         rightPanel.setOpaque(false);
 
         // Tambahkan gambar di atas jam
-        ImageIcon icon = new ImageIcon("src/image/logoP.png"); // Pastikan path dan file gambar sesuai
+        ImageIcon icon = new ImageIcon(""); // Pastikan path dan file gambar sesuai
         Image img = icon.getImage().getScaledInstance(300, 100, Image.SCALE_SMOOTH); // atur ukuran di sini
         ImageIcon scaledIcon = new ImageIcon(img);
         JLabel imageLabel = new JLabel(scaledIcon);
@@ -134,5 +141,12 @@ public class MainMenuAdminFrame extends JFrame {
         });
 
         setVisible(true);
+    }
+
+    // Utility untuk resize icon
+    private ImageIcon resizeIcon(String path, int width, int height) {
+        ImageIcon icon = new ImageIcon(path);
+        Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(img);
     }
 }
