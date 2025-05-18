@@ -1,6 +1,6 @@
-# AssetManagement
+# AssetCheck
 
-**AssetManagement** adalah aplikasi desktop berbasis Java Swing yang digunakan untuk mengelola inventaris barang di sebuah organisasi. Program ini menyediakan fitur utama seperti:
+**AssetCheck** adalah aplikasi desktop berbasis Java Swing yang digunakan untuk mengelola inventaris barang di sebuah organisasi. Program ini menyediakan fitur utama seperti:
 
 - **Manajemen Data Barang:** Melihat, menambah, dan mengelola daftar barang/inventaris.
 - **Manajemen User:** Mengelola data pengguna (admin dan user biasa).
