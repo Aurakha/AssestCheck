@@ -19,13 +19,28 @@ public class RiwayatUserFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        // Main panel with Border Layout
+        JPanel mainPanel = new JPanel(new BorderLayout(0, 15)); // Add vertical gap between components
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding around the frame
+        
+        // Table setup
         tableModel = new DefaultTableModel(
             new String[] { "Nama Barang", "Jumlah", "Status", "Tanggal" }, 0
         );
         table = new JTable(tableModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         refreshTable();
+        
+        // Put table in a scroll pane with a titled border
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Riwayat Transaksi Peminjaman"));
+        
+        // Add components to main panel
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        // Add main panel to frame
+        add(mainPanel);
 
-        add(new JScrollPane(table), BorderLayout.CENTER);
         setVisible(true);
     }
 
