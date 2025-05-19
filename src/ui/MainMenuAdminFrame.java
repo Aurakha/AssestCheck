@@ -103,7 +103,7 @@ public class MainMenuAdminFrame extends JFrame {
         rightPanel.add(imageLabel, BorderLayout.NORTH);
 
         JLabel clockLabel = new JLabel();
-        clockLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        clockLabel.setFont(new Font("Segoe UI", Font.BOLD, 32));
         clockLabel.setForeground(new Color(52, 73, 94));
         clockLabel.setHorizontalAlignment(SwingConstants.CENTER);
         clockLabel.setVerticalAlignment(SwingConstants.CENTER);
