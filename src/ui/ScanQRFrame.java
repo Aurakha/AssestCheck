@@ -15,20 +15,55 @@ public class ScanQRFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JPanel panel = new JPanel(new GridLayout(3, 1, 5, 5));
-        qrCodeField = new JTextField();
-        infoArea = new JTextArea();
-        infoArea.setEditable(false);
+        // Main panel with Border Layout
+        JPanel mainPanel = new JPanel(new BorderLayout(0, 15)); // Add vertical gap
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
         
+        // Input panel
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder("Scan QR Code"),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        
+        // QR Code field panel
+        JPanel qrPanel = new JPanel(new BorderLayout(5, 5));
+        JLabel qrLabel = new JLabel("Masukkan QR Code Barang:");
+        qrCodeField = new JTextField();
+        qrPanel.add(qrLabel, BorderLayout.NORTH);
+        qrPanel.add(qrCodeField, BorderLayout.CENTER);
+        
+        // Button panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton scanButton = new JButton("Scan QR");
         scanButton.addActionListener(e -> handleScanQRCode());
-
-        panel.add(new JLabel("Masukkan QR Code Barang:"));
-        panel.add(qrCodeField);
-        panel.add(scanButton);
-        panel.add(new JScrollPane(infoArea));
-
-        add(panel, BorderLayout.CENTER);
+        buttonPanel.add(scanButton);
+        
+        // Add to input panel
+        inputPanel.add(qrPanel);
+        inputPanel.add(buttonPanel);
+        
+        // Info panel
+        JPanel infoPanel = new JPanel(new BorderLayout());
+        infoPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder("Informasi Barang"),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        
+        infoArea = new JTextArea();
+        infoArea.setEditable(false);
+        infoArea.setLineWrap(true);
+        infoArea.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(infoArea);
+        infoPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        // Add components to main panel
+        mainPanel.add(inputPanel, BorderLayout.NORTH);
+        mainPanel.add(infoPanel, BorderLayout.CENTER);
+        
+        // Add main panel to frame
+        add(mainPanel);
 
         setVisible(true);
     }
