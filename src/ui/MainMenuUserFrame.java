@@ -15,16 +15,22 @@ public class MainMenuUserFrame extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
 
-        // Panel utama
+        // Panel utama dengan padding dan background
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
         mainPanel.setBackground(new Color(245, 245, 250));
 
-        // Welcome label
+        // Panel kiri: label welcome + tombol
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BorderLayout());
+        leftPanel.setOpaque(false);
+
+        // Welcome label rata kiri
         JLabel welcomeLabel = new JLabel("Selamat datang, " + user.getUsername() + "!", SwingConstants.LEFT);
         welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         welcomeLabel.setForeground(new Color(44, 62, 80));
         welcomeLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        leftPanel.add(welcomeLabel, BorderLayout.NORTH);
 
         // Panel tombol
         JPanel buttonPanel = new JPanel(new GridLayout(6, 1, 12, 12)) {
@@ -69,10 +75,38 @@ public class MainMenuUserFrame extends JFrame {
         buttonPanel.add(btnScanQR);
         buttonPanel.add(btnLogout);
 
-        mainPanel.add(welcomeLabel, BorderLayout.NORTH);
-        mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        leftPanel.add(buttonPanel, BorderLayout.CENTER);
 
-        add(mainPanel);
+        // Panel kanan: jam digital + tanggal
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setOpaque(false);
+
+        // Label jam & tanggal
+        JLabel clockLabel = new JLabel();
+        clockLabel.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        clockLabel.setForeground(new Color(52, 73, 94));
+        clockLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        clockLabel.setVerticalAlignment(SwingConstants.CENTER);
+        rightPanel.add(clockLabel, BorderLayout.CENTER);
+
+        // Timer untuk update jam dan tanggal setiap detik
+        Timer timer = new Timer(1000, e -> {
+            java.time.LocalDateTime now = java.time.LocalDateTime.now();
+            String dateTimeStr = now.format(java.time.format.DateTimeFormatter.ofPattern("dd MMMM yyyy | HH:mm:ss"));
+            clockLabel.setText(dateTimeStr);
+        });
+        timer.setInitialDelay(0);
+        timer.start();
+
+        // Panel utama menggunakan GridLayout 1 baris 2 kolom
+        JPanel contentPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        contentPanel.setOpaque(false);
+        contentPanel.add(leftPanel);
+        contentPanel.add(rightPanel);
+
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
+
+        setContentPane(mainPanel);
 
         // Action Listeners
         btnLihatBarang.addActionListener(e -> new InventoryFrame());
