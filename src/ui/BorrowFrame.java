@@ -27,22 +27,52 @@ public class BorrowFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        // Main panel with Border Layout
+        JPanel mainPanel = new JPanel(new BorderLayout(0, 15)); // Add vertical gap between components
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding around the frame
+        
+        // Table setup
         tableModel = new DefaultTableModel(new String[] { "Nama Barang", "Jumlah Tersedia" }, 0);
         table = new JTable(tableModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         refreshTable();
+        
+        // Put table in a scroll pane with a titled border
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Daftar Barang"));
 
-        JPanel inputPanel = new JPanel(new FlowLayout());
-        tfJumlah = new JTextField(5);
-        btnRequest = new JButton("Request Pinjam");
-
+        // Form panel for input
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder("Form Peminjaman"),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        
+        // Input components
+        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        tfJumlah = new JTextField(10);
         inputPanel.add(new JLabel("Jumlah yang ingin dipinjam:"));
         inputPanel.add(tfJumlah);
-        inputPanel.add(btnRequest);
-
+        
+        // Button panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        btnRequest = new JButton("Request Pinjam");
+        buttonPanel.add(btnRequest);
+        
+        // Add input and button panels to form panel
+        formPanel.add(inputPanel);
+        formPanel.add(buttonPanel);
+        
+        // Add action listener to button
         btnRequest.addActionListener(e -> handleRequestPinjam());
-
-        add(new JScrollPane(table), BorderLayout.CENTER);
-        add(inputPanel, BorderLayout.SOUTH);
+        
+        // Add components to main panel
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(formPanel, BorderLayout.SOUTH);
+        
+        // Add main panel to frame
+        add(mainPanel);
 
         setVisible(true);
     }
