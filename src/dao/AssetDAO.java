@@ -110,19 +110,35 @@ public class AssetDAO {
     }
 
     // Update quantity asset
-    public static boolean updateQuantity(String assetName, int quantityReturned) {
+    public static boolean updateQuantity(String assetName, int newQuantity) {
+        String sql = "UPDATE assets SET quantity = ? WHERE name = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, newQuantity);     // Tetapkan nilai baru langsung
+            ps.setString(2, assetName);
+            
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean increaseQuantity(String assetName, int quantityToAdd) {
         String sql = "UPDATE assets SET quantity = quantity + ? WHERE name = ?";
     
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
     
-            ps.setInt(1, quantityReturned);  // Menambahkan jumlah yang dikembalikan ke stok
-            ps.setString(2, assetName);       // Menentukan nama asset yang akan diupdate
+            ps.setInt(1, quantityToAdd);
+            ps.setString(2, assetName);
     
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-    }    
+    }
 }

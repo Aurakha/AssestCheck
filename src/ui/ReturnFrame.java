@@ -86,8 +86,7 @@ public class ReturnFrame extends JFrame {
         int quantity = (int) tableModel.getValueAt(selectedRow, 1);
 
         // Update status transaksi menjadi "Dikembalikan"
-        boolean success = TransactionDAO.updateTransactionStatus(currentUser, assetName, quantity, "Dikembalikan");
-
+boolean success = TransactionDAO.updateTransactionStatus(currentUser, assetName, quantity, "Dikembalikan");
         if (success) {
             // Update stok barang: menambahkan jumlah yang dikembalikan
             boolean updated = AssetDAO.updateQuantity(assetName, quantity);
