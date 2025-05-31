@@ -109,6 +109,43 @@ public class AssetDAO {
         }
     }
 
+    public static boolean updateAsset(String oldName, String newName, int newQuantity, String newCategory) {
+    String sql = "UPDATE assets SET name = ?, quantity = ?, category_id = (SELECT id FROM categories WHERE name = ?) WHERE name = ?";
+
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, newName);
+        ps.setInt(2, newQuantity);
+        ps.setString(3, newCategory);
+        ps.setString(4, oldName);
+
+        return ps.executeUpdate() > 0;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+public static boolean deleteAssetByName(String name) {
+    String sql = "DELETE FROM assets WHERE name = ?";
+    
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setString(1, name);
+        int affectedRows = ps.executeUpdate();
+        return affectedRows > 0;
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+    
+
     // Update quantity asset
     public static boolean updateQuantity(String assetName, int newQuantity) {
         String sql = "UPDATE assets SET quantity = ? WHERE name = ?";

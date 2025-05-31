@@ -86,6 +86,30 @@ public class InventoryFrame extends JFrame {
         mainPanel.add(formPanel, BorderLayout.NORTH);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         
+        // Tombol hapus
+        JButton btnHapus = new JButton("Hapus Barang");
+        btnHapus.setBackground(new Color(231, 76, 60));
+        btnHapus.setForeground(Color.WHITE);
+        btnHapus.setFocusPainted(false);
+        btnHapus.setFont(new Font("Arial", Font.BOLD, 13));
+        btnHapus.addActionListener(e -> hapusBarang());
+
+        // Tambahkan tombol Edit di bawah tombol Hapus
+        JButton btnEdit = new JButton("Edit Barang");
+        btnEdit.setBackground(new Color(52, 152, 219));
+        btnEdit.setForeground(Color.WHITE);
+        btnEdit.setFocusPainted(false);
+        btnEdit.setFont(new Font("Arial", Font.BOLD, 13));
+        btnEdit.addActionListener(e -> editBarang());
+
+        // Panel bawah untuk tombol hapus dan edit
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        bottomPanel.setBackground(new Color(245, 245, 245));
+        bottomPanel.add(btnEdit);
+        bottomPanel.add(btnHapus);
+
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+
         // Set content pane
         setContentPane(mainPanel);
         
@@ -105,6 +129,80 @@ public class InventoryFrame extends JFrame {
 
             if (matchesCategory && matchesSearch) {
                 tableModel.addRow(new Object[] { asset.getName(), asset.getQuantity(), asset.getCategory() });
+            }
+        }
+    }
+
+    // Tambahkan method hapusBarang
+    private void hapusBarang() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih barang yang ingin dihapus.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String namaBarang = (String) tableModel.getValueAt(selectedRow, 0);
+
+        int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus barang \"" + namaBarang + "\"?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            boolean success = AssetDAO.deleteAssetByName(namaBarang);
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Barang berhasil dihapus.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                refreshTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menghapus barang.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    // Tambahkan method editBarang
+    private void editBarang() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih barang yang ingin diedit.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String namaBarang = (String) tableModel.getValueAt(selectedRow, 0);
+        int jumlah = (int) tableModel.getValueAt(selectedRow, 1);
+        String kategori = (String) tableModel.getValueAt(selectedRow, 2);
+
+        JTextField tfNama = new JTextField(namaBarang);
+        JTextField tfJumlah = new JTextField(String.valueOf(jumlah));
+        JComboBox<String> cbKategori = new JComboBox<>(new String[] { "Elektronik", "Peralatan Kantor", "Peralatan IT", "Peralatan Ruang Meeting" });
+        cbKategori.setSelectedItem(kategori);
+
+        JPanel panel = new JPanel(new GridLayout(3, 2, 8, 8));
+        panel.add(new JLabel("Nama Barang:"));
+        panel.add(tfNama);
+        panel.add(new JLabel("Jumlah:"));
+        panel.add(tfJumlah);
+        panel.add(new JLabel("Kategori:"));
+        panel.add(cbKategori);
+
+        int result = JOptionPane.showConfirmDialog(this, panel, "Edit Barang", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            String newNama = tfNama.getText().trim();
+            String jumlahStr = tfJumlah.getText().trim();
+            String newKategori = (String) cbKategori.getSelectedItem();
+
+            if (newNama.isEmpty() || jumlahStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nama dan jumlah tidak boleh kosong.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            int newJumlah;
+            try {
+                newJumlah = Integer.parseInt(jumlahStr);
+                if (newJumlah < 0) throw new NumberFormatException();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Jumlah harus berupa angka positif.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            boolean success = AssetDAO.updateAsset(namaBarang, newNama, newJumlah, newKategori);
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Barang berhasil diedit.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                refreshTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal mengedit barang.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

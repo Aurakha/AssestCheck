@@ -89,7 +89,7 @@ public class ReturnFrame extends JFrame {
 boolean success = TransactionDAO.updateTransactionStatus(currentUser, assetName, quantity, "Dikembalikan");
         if (success) {
             // Update stok barang: menambahkan jumlah yang dikembalikan
-            boolean updated = AssetDAO.updateQuantity(assetName, quantity);
+            boolean updated = AssetDAO.increaseQuantity(assetName, quantity);
 
             // Log
             LogDAO.insertLog("User '" + currentUser + "' mengembalikan " + quantity + " " + assetName);
